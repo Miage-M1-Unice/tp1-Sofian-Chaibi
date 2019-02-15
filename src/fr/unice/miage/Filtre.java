@@ -2,10 +2,13 @@ package fr.unice.miage;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.regex.Pattern;
 
 public class Filtre implements FilenameFilter {
 
     private String regex;
+
+    private Pattern p;
 
     public Filtre(String regex) {
         this.regex = regex;
@@ -15,7 +18,7 @@ public class Filtre implements FilenameFilter {
     @Override
     public boolean accept(File file, String name) {
         File f = new File(file.getPath()+"/"+name);
-        return name.endsWith(regex)|| f.isDirectory() ;
+        return name.matches(regex)|| f.isDirectory() ;
     }
 
 }
