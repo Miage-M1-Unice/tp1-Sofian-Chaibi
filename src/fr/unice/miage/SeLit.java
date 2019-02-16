@@ -34,7 +34,7 @@ public class SeLit {
                     // split dans le cas ou il se situerait en fin de ligne a lire
                     String[] split = s.split("// ");
                     if (split.length == 1) {
-                        s = split[0]; // ne s'affichera pas 
+                        s = split[0]; // ne s'affichera pas
                         System.out.println("LU: " + s);
                     }
                 }
