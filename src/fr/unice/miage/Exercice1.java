@@ -2,6 +2,7 @@ package fr.unice.miage;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Scanner;
 
 public class Exercice1{
 
