@@ -1,6 +1,4 @@
-package fr.unice.miage;
-
-import com.sun.xml.internal.ws.commons.xmlutil.Converter;
+package fr.unice.miage.Exercice1;
 
 import java.io.*;
 import java.util.Scanner;
