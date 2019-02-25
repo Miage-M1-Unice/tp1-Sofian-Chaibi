@@ -17,11 +17,10 @@ public class GenericToString {
     }
 
     public String toString(Object obj, int profondeur) throws IllegalAccessException {
-        if (profondeur == 0) {
+        if (profondeur == 0 || obj == null) {
             return chaine + "]";
         }
         chaine += obj.getClass().getName() + "[";
-
         for (Field attribut : obj.getClass().getDeclaredFields()) {
             attribut.setAccessible(true);
             chaine += attribut.getName() + "=";
@@ -43,18 +42,36 @@ public class GenericToString {
 
 
         }
-        /*Class cl =obj.getClass().getSuperclass();
-        if (!(cl.getSimpleName() =="Object"))
-        {
-            Object f = cl.cast(obj);
-            return toString(f,profondeur-1);
+        Class cl = obj.getClass().getSuperclass();
+        if (!(cl.getSimpleName() == "Object")) {
+            for (Field attribut : cl.getFields()) {
+                attribut.setAccessible(true);
+                chaine += attribut.getName() + "=";
+                Object objField = attribut.get(obj);
+                if (!attribut.getType().isPrimitive()) {
+                    if (attribut.getType().isArray()) {
+                        chaine += "{";
+                        for (int i = 0; i < Array.getLength(objField); i++) {
+                            chaine += Array.get(objField, i).toString() + ",";
+                        }
+                        chaine += "}";
+                        chaine += "; ";
+                        continue;
+                    } else
+                        return toString(objField, profondeur - 1);
+                }
+                chaine += objField.toString();
+                chaine += "; ";
+            }
         }
-        else*/
-        return toString(obj, profondeur - 1);
 
+        return toString(null, profondeur - 1);
 
     }
 
+    /*public String LoadAttribute(String chaine, Field attribut){
+
+    }*/
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException {
         System.out.println(new GenericToString().toString(new Point(12, 24), 1));
 
