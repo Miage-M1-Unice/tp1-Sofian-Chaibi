@@ -1,12 +1,9 @@
 package fr.unice.miage.Exercice2;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
-
 import java.awt.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class GenericToString {
 
@@ -21,6 +18,7 @@ public class GenericToString {
             return chaine + "]";
         }
         chaine += obj.getClass().getName() + "[";
+        Field[] fields = obj.getClass().getDeclaredFields();
         for (Field attribut : obj.getClass().getDeclaredFields()) {
             attribut.setAccessible(true);
             chaine += attribut.getName() + "=";
@@ -39,30 +37,30 @@ public class GenericToString {
             }
             chaine += objField.toString();
             chaine += "; ";
-
-
         }
+
         Class cl = obj.getClass().getSuperclass();
-        if (!(cl.getSimpleName() == "Object")) {
-            for (Field attribut : cl.getFields()) {
-                attribut.setAccessible(true);
-                chaine += attribut.getName() + "=";
-                Object objField = attribut.get(obj);
-                if (!attribut.getType().isPrimitive()) {
-                    if (attribut.getType().isArray()) {
-                        chaine += "{";
-                        for (int i = 0; i < Array.getLength(objField); i++) {
-                            chaine += Array.get(objField, i).toString() + ",";
-                        }
-                        chaine += "}";
-                        chaine += "; ";
-                        continue;
-                    } else
-                        return toString(objField, profondeur - 1);
+        while (cl !=null) {
+                for (Field attribut : cl.getFields()) {
+                    attribut.setAccessible(true);
+                    chaine += attribut.getName() + "=";
+                    Object objField = attribut.get(obj);
+                    if (!attribut.getType().isPrimitive()) {
+                        if (attribut.getType().isArray()) {
+                            chaine += "{";
+                            for (int i = 0; i < Array.getLength(objField); i++) {
+                                chaine += Array.get(objField, i).toString() + ",";
+                            }
+                            chaine += "}";
+                            chaine += "; ";
+                            continue;
+                        } else
+                            return toString(objField, profondeur);
+                    }
+                    chaine += objField.toString();
+                    chaine += "; ";
                 }
-                chaine += objField.toString();
-                chaine += "; ";
-            }
+            cl = cl.getSuperclass();
         }
 
         return toString(null, profondeur - 1);
